@@ -1,0 +1,5 @@
+PyPDF2==3.0.1
+holidays==0.45
+pandas==2.2.1
+openpyxl==3.1.2
+XlsxWriter==3.2.0
