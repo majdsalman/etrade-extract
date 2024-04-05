@@ -452,6 +452,9 @@ if __name__ == "__main__":
                     df_payslip = extract_values_payslip(file_path)
                     df_payslip_options = pd.concat([df_payslip_options, df_payslip], ignore_index=True)
 
+    if df_gains_losses.empty:
+        print(f"{red_text_start}No trade data found in dir: {transactions_folder}{red_text_end}")
+        exit(1)
 
     df_orders = match_orders_payslip(df_gains_losses, df_payslip_options)
     df_all = combine_data(df_orders, df_benefits_rsu, df_benefits_options)
