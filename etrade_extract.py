@@ -312,7 +312,6 @@ def combine_data(trades_df, benefits_rsu_df, benefits_options_df):
     # Concatenate the new "Exercise" rows with the original trades dataframe
     new_trades_df = pd.concat([new_df, exercise_rows], ignore_index=True)
 
-
     shares_exercised = benefits_options_df[benefits_options_df['Event Type'] == 'Shares exercised']
 
     # Remove the matching rows from the filtered dataframe
@@ -404,16 +403,22 @@ def save_files(df_all):
     # Create a Pandas Excel writer using XlsxWriter as the engine
     with pd.ExcelWriter(output_file_name, engine='xlsxwriter') as writer:
         # Write the dataframe data to XlsxWriter
-        df_all.to_excel(writer, index=False, sheet_name='Sheet1')
+        df_all.to_excel(writer, index=False, sheet_name='trades_and_benefits')
 
         workbook = writer.book
-        worksheet = writer.sheets['Sheet1']
+
+        worksheet = writer.sheets['trades_and_benefits']
 
         green_fill = workbook.add_format({'bg_color': '#C6EFCE'})
+        green_number_format = workbook.add_format({'bg_color': '#C6EFCE', 'num_format': '0.000'})
         red_fill = workbook.add_format({'bg_color': '#FFC7CE', 'font_color': '#9C0006'})
         num_rows = len(df_all.index)
-        for column in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']:
+
+        for column in ['A', 'B', 'C', 'D']:
             worksheet.set_column(f'{column}2:{column}{num_rows + 1}', 15, green_fill)
+
+        for column in ['E', 'F', 'G', 'H', 'I']:
+            worksheet.set_column(f'{column}2:{column}{num_rows + 1}', 15, green_number_format)
 
         operation_col_idx = df_all.columns.get_loc('Operation') + 1  # 1-based index
         operation_col_letter = chr(operation_col_idx + 64)  # Convert to Excel column letter
